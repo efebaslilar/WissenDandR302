@@ -1,0 +1,85 @@
+﻿@model BookViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Management/Views/Shared/_LayoutManagement.cshtml";
+}
+
+<div class="col-md-6 col-md-offset-3 col-md-offset-3">
+    <h1>Yeni Kitap Ekle</h1>
+
+    <form asp-area="Management" asp-controller="Book" asp-action="Create" 
+    method="post" enctype="multipart/form-data">
+
+        <div class="text-danger" asp-validation-summary="All"></div>
+
+        <div class="form-group">
+            <span class="text-danger" style="font-weight:bold;margin-right:3px">*</span>
+            <label class="control-label">Kitap Adı:</label>
+            <input type="text" asp-for="BookName" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <span class="text-danger" style="font-weight:bold;margin-right:3px">*</span>
+            <label class="control-label">Tür:</label>
+            <select class="form-control" asp-for="BookGenreId">
+                @foreach (BookGenreViewModel item in ViewBag.BookGenres)
+                {
+                    <option value=@item.Id>@item.GenreName</option>
+                }
+            </select>
+
+        </div>
+
+        <div class="form-group">
+            <span class="text-danger" style="font-weight:bold;margin-right:3px">*</span>
+            <label class="control-label">Yazar:</label>
+            <select class="form-control" name="AuthorId">
+                @foreach (AuthorViewModel item in ViewBag.Authors)
+                {
+                    <option value=@item.Id>@item.Name @item.Surname</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <span class="text-danger" style="font-weight:bold;margin-right:3px">*</span>
+            <label class="control-label">Sayfa Sayısı:</label>
+            <input type="number" asp-for="PageNumber" class="form-control" min="1" required />
+        </div>
+        <div class="form-group">
+            <span class="text-danger" style="font-weight:bold;margin-right:3px">*</span>
+            <label class="control-label">Basım Yılı:</label>
+            <input type="number" asp-for="PressYear" class="form-control" />
+        </div>
+        <div class="form-group">
+            <span class="text-danger" style="font-weight:bold;margin-right:3px">*</span>
+            <label class="control-label">Birim Fiyat:</label>
+            <input type="number" asp-for="Price" class="form-control" min="0" required />
+        </div>
+
+        <div class="form-group">
+            <span class="text-danger" style="font-weight:bold;margin-right:3px">*</span>
+            <label id="quantitylbl" class="control-label">Stok:</label>
+            <input type="range" asp-for="Quantity" id="quantityRange"
+                   class="form-control" min="1" max="100" required />
+        </div>
+
+        <div class="form-group">
+            <input name="Files"  type="file" class="form-control" multiple />
+        </div>
+
+        <input type="submit" value="KAYDET" class="btn btn-default btn-block"
+               style="background-color:#5a88ca;color:white" />
+    </form>
+</div>
+@section wscripts{
+<script>
+        $(document).ready(function(){
+        $("#quantityRange").change(function(){
+            var quantity=$("#quantityRange").val();
+            $("#quantitylbl").html("Stok:  "+ quantity);
+        });
+
+    });
+</script>
+}

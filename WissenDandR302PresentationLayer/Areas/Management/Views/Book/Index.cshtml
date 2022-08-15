@@ -1,0 +1,131 @@
+﻿@model ICollection<BookViewModel>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Management/Views/Shared/_LayoutManagement.cshtml";
+}
+
+<h1>Sistemdeki Tüm Kitaplar</h1>
+
+@if (TempData["CreateBookSuccessMessage"] != null)
+{
+    <div style="margin-top:10px" class="callout callout-success">
+        @TempData["CreateBookSuccessMessage"]
+
+    </div>
+}
+@if (TempData["CreateBookWarningMessage"] != null)
+{
+    <div style="margin-top:10px" class="callout callout-warning">
+        @TempData["CreateBookWarningMessage"]
+    </div>
+}
+<table class="table table-hover" style="margin-top:10px">
+    <thead>
+        <tr>
+            <th> Kitap Adı</th>
+            <th> Kayıt Tarihi</th>
+            <th> Kitap Resim</th>
+            <th> Yazar  </th>
+            <th> Tür  </th>
+            <th> Sayfa Sayısı </th>
+            <th>  Birim Fiyat  </th>
+            <th>  Stok  </th>
+            <th>  İşlemler </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (BookViewModel item in Model)
+        {
+            <tr>
+                <td>@item.BookName</td>
+                <td>@item.CreatedDate.ToString("dd.MMM.yyyy")</td>
+                @if (item.BookPictures != null && item.BookPictures.Count > 0)
+                {
+                    <td>
+                        <img src="@item.BookPictures?.FirstOrDefault()?.Picture"
+                     alt="noimage" style="width:85px; height:85px">
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <img src="~/BookPictures/noimage.jfif"
+                     alt="noimage" style="width:85px; height:85px">
+                    </td>
+
+                }
+
+                <td>@item.Author?.Name @item.Author?.Surname</td>
+                <td>@item.BookGenre?.GenreName</td>
+                <td>@item.PageNumber</td>
+                <td>@item.Price ₺</td>
+                <td>@item.Quantity</td>
+                <td>İşlem butonları gelsin...</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+<div class="row">
+    <div class="text-center col-4 offset-4">
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" id="pageprevious"
+                   href="@Url.ActionLink("Index","Book",new{area="Management",
+             page=ViewBag.CurrentPage-1})">
+                    &laquo;
+                </a>
+            </li>
+
+            @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
+            {
+                <li class="page-item">
+                    <a id="pageprevious"
+                    class="page-link" onclick="PageBtnClicked()"
+                   href="@Url.ActionLink("Index","Book",new{area="Management",
+             page=i})">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <li class="page-item">
+                <a class="page-link" id="pagenext" onclick="PageBtnClicked()
+                   href="@Url.ActionLink("Index","Book",new{area="Management",
+             page=ViewBag.CurrentPage+1})">
+                    &raquo;
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</div>
+
+@section wscripts{
+<script>
+
+    function PageBtnClicked()
+    {
+        alert("deneme");
+        if(ViewBag.CurrentPage<=1)
+        {
+            $('#pageprevious').attr("disabled",true );
+        }
+        else
+        {
+             $('#pageprevious').attr("disabled",false );
+        }
+
+
+        if(ViewBag.CurrentPage= > ViewBag.TotalPages)
+        {
+            $('#pagenext').attr("disabled",false );
+        }
+        else
+        {
+             $('#pagenext').attr("disabled",true );
+        }
+    }
+
+</script>
+}
